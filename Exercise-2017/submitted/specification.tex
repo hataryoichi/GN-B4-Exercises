@@ -1,0 +1,157 @@
+\documentclass[fleqn, 14pt]{sty/extarticlej}
+\oddsidemargin=-1cm
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{indentfirst}
+\textwidth=18cm
+\textheight=23cm
+\topmargin=0cm
+\headheight=1cm
+\headsep=0cm
+\footskip=1cm
+
+\def\labelenumi{(\theenumi)}
+\def\theenumii{\Alph{enumii}}
+\def\theenumiii{(\alph{enumiii})}
+\def\：{\makebox[1zw][l]{：}}
+\usepackage{comment}
+\usepackage{url}
+\urlstyle{same}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% sty/ にある研究室独自のスタイルファイル
+\usepackage{jtygm}  % フォントに関する余計な警告を消す
+\usepackage{nutils} % insertfigure, figef, tabref マクロ
+
+\def\figdir{./figs} % 図のディレクトリ
+\def\figext{pdf}    % 図のファイルの拡張子
+
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 表題
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+{\Large {\bf SlackBotプログラムの仕様書}}
+
+\end{center}
+\begin{flushright}
+2017年04月21日\\
+
+乃村研究室 秦 亮一
+\end{flushright}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 概要
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{概要}
+本資料は，平成29年度GNグループB4新人研修課題のSlackBotプログラムの仕様についてまとめてまとめたものである.本プログラムは以下の２つの機能をもつ.
+\begin{enumerate}
+\item 任意の文字列を発言する機能
+\item 岡山県の天気情報を発言する機能
+\end{enumerate}
+\section{対象とする利用者}
+本プログラムは以下のアカウントを所有する利用者を対象としている.
+\begin{enumerate}
+\item Slackアカウント
+\end{enumerate}
+\section{機能}
+本プログラムがもつ2つの機能を以下に述べる.本プログラムはSlackに対するユーザーの発言を受信し，受信した内容に対応する内容をSlackへ発言する.ただし，受信する発言は``@Hbot''で始まる発言のみである.
+\begin{description}
+\item[(機能1)] 任意の文字列を発言する機能\\
+  この機能は受信した発言の中に ``「.*」と言って''という文字列が含まれる場合， 鉤括弧内の文字列を発言する機能である.鉤括弧の中身は任意の文字列とする.例えば，受信した発言の中に``「hello」と言って''という文字列が含まれる場合，helloと発言する.
+\item[(機能2)] 岡山県の天気情報を発言する機能\\
+  この機能は，受信した発言が``@Hbot 岡山の天気''である場合，岡山県の天気情報を発言する機能である.なお，天気情報はWeatherHack\cite{ITR}を用いて取得する.発言する内容は天気概況文と今日と明日の天気情報である.\\
+\end{description}
+(機能1)，(機能2)のどちらにも該当しない発言を受信した場合，何も発言しない.
+
+\section{動作環境}
+本プログラムの動作環境を表1に示す.また，表1の環境において本ブログラムが正常に動作することを確認した.
+
+\begin{table}[tb]
+  \begin{center}
+    \caption{動作環境}\label{tab:time_range_ratio}
+    \ecaption{Frequency of task ocurrences.}
+    \begin{tabular}{l|l}
+      \hline\hline
+      \multicolumn{1}{l|}{項目} & \multicolumn{1}{l|}{内容} \\
+      \hline
+      
+      OS & Linux Debian GNU/Linux(version 8.1) \\
+      CPU & Inter(R) Core(TIM) i5-4670CPU(3.40GHz) \\
+      メモリ & 8.00GB \\
+      ブラウザ & FireFox バージョン 52.02 \\
+      ソフトウェア & Ruby バージョン 2.1.5\\
+                 & bundler バージョン 1.14.6\\
+                 & heroku CLI バージョン 5.8.6\\
+                 & Git バージョン 2.1.4\\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\section{環境構築}
+\subsection{概要}
+本プログラムを実行するために必要な環境構築の手順を以下に示す.
+\begin{enumerate}
+\item SlackのWebHooksの設定
+\item Heroku上にアプリケーションを生成
+\end{enumerate}
+次節で具体的な手順を述べる.
+\subsection{具体的な手順}
+\subsubsection{SlackのWebHooksの設定}
+\begin{enumerate}
+\item 自身のSlackアカウントにログインする.
+\item 以下のURLにアクセスし「Manage」をクリックする.\\
+  https://slack.com./apps
+\item 「Custom Integrations」から「Incoming WebHooks」をクリックする.
+\item 「Add Configuration」をクリックし，新たなIncoming WebHooksを追加する.
+\item Botが発言するチャンネルを選択した後，「Add Incoming WebHooks integration」をクリックし，Webhook URLを取得する.
+\item 再び「Custome Integrations」にアクセスし，「Outgoing WebHooks」をクリックする.
+\item 「Add Configuration」から，「Add Outgoing WebHooks integration」をクリックする.
+\item Outgoing WebHookに関して以下の設定をする.
+  \begin{enumerate}
+  \item 発言を監視するchannel
+  \item WebHooksが動作する契機となる「Trigger Word」(@Hbot)
+  \item WebHooksが動作した際にPOSTを行うURL\\
+    https://$<$app\_name$>$.herokuapp.com/git\\
+    ここで$<$app\_name$>$はHerokuで作成したアプリケーションの名前である.
+  \end{enumerate}
+\end{enumerate}
+\subsubsection{Heroku上にアプリケーションを生成}
+\begin{enumerate}
+\item 以下のURLからHerokuにアクセスし，「Sign up」から新しいアカウントを登録する.\\
+  https://www.heroku.com/
+\item Herokuから送信されたメールに記載されているURLをクリックし，パスワードを設定する.
+\item 登録したアカウントでログインし，「Getting Started with Heroku」の使用する言語として「Ruby」選択する.
+\item 「I'm ready to start」をクリックし，「Download Heroku CLI for...」からCLIをダウンロードする.
+\item 以下のコマンドを実行し，Herokuにログインする.\\
+  \$ heroku login
+\item 以下のコマンドを実行し，Heroku上にアプリケーションを生成する.\\
+  \$ heroku create $<$app\_name$>$
+\item 以下のコマンドを実行し，6.2.1項の(5)で取得したWebhook URLをHerokuの環境変数に設定する.\\
+  \$ heroku config:set INCOMING\_WEBHOOK\_URL="https://XXXXXXXX"
+\item 以下のコマンドを実行し，gemをインストールする.\\
+  \$ bundle install --path bendor/bundle
+\end{enumerate}   
+\section{使用方法}
+本プログラムを実行するために手順を以下に示す.
+\begin{enumerate}
+\item コマンドラインに以下のコマンドを入力し，Herokuにアプリケーションをデプロイすることで実行する.\\
+  \$ git push heroku master
+\end{enumerate}
+\section{エラー処理と保証しない動作}
+\subsection{エラー処理}
+本プログラムはエラー処理を実装していない.
+\subsection{保証しない動作}
+本プログラムの保証しない動作をいかに示す.
+\begin{enumerate}
+\item Slack以外のPOSTリクエストをブロックする動作
+\item 表1に示す動作環境以外でプログラムを実行
+\end{enumerate}
+
+
+
+\bibliographystyle{ipsjunsrt}
+\bibliography{mybibdata}
+
+\end{document}
+

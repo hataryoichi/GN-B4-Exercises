@@ -1,0 +1,81 @@
+\documentclass[fleqn, 14pt]{sty/extarticlej}
+\oddsidemargin=-1cm
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{indentfirst}
+\textwidth=18cm
+\textheight=23cm
+\topmargin=0cm
+\headheight=1cm
+\headsep=0cm
+\footskip=1cm
+
+\def\labelenumi{(\theenumi)}
+\def\theenumii{\Alph{enumii}}
+\def\theenumiii{(\alph{enumiii})}
+\def\：{\makebox[1zw][l]{：}}
+\usepackage{comment}
+\usepackage{url}
+\urlstyle{same}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% sty/ にある研究室独自のスタイルファイル
+\usepackage{jtygm}  % フォントに関する余計な警告を消す
+\usepackage{nutils} % insertfigure, figef, tabref マクロ
+
+\def\figdir{./figs} % 図のディレクトリ
+\def\figext{pdf}    % 図のファイルの拡張子
+
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 表題
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+{\Large {\bf 平成29年度GNグループB4新人研修課題 報告書}}
+
+\end{center}
+\begin{flushright}
+2017年04月21日\\
+
+乃村研究室 秦 亮一
+\end{flushright}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 概要
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{概要}
+本資料は平成29年度GNグループB4新人研修課題の報告書である.課題ではSlackBotプログラムを作成した.本資料では，課題内容，理解できなかった部分，作成できなかった機能および自主的に作成した機能について述べる.
+
+\section{課題内容}
+RubyによるSlackBotプログラムを作成する.具体的には以下の２つを行う.
+\begin{enumerate}
+\item 任意の文字列を発言するプログラムの作成
+\item SlackBotプログラムへの機能の追加\\
+  WebサービスのAPIやWebhookを利用した機能の追加
+\end{enumerate}
+\hspace{30pt}作成に用いたRubyのバージョンは2.1.5である.
+
+
+
+\section{理解できなかった部分}
+理解できなかった部分を以下に示す.
+\begin{enumerate}
+\item HTTPリクエストの使い分け
+
+\end{enumerate}
+
+\section{作成できなかった機能}
+作成できなかった機能を以下に示す.
+\begin{enumerate}
+\item 天気情報を発言する機能において，地域を指定できる機能
+
+\end{enumerate}
+
+\section{自主的に作成した機能}
+自主的に作成した機能を以下に示す.
+\begin{enumerate}
+\item ``岡山の天気''という発言に反応し，岡山県の天気情報を発言する機能
+
+\end{enumerate}
+
+
+\end{document}
